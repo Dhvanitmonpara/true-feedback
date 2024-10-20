@@ -4,6 +4,7 @@ import bcryptjs from "bcryptjs";
 import { sendVerificationEmail } from "@/helpers/sendVerificationEmail";
 
 export async function POST(request: Request) {
+  console.log("lol");
   await connectDB();
   try {
     const { username, email, password } = await request.json();
