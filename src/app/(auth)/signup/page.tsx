@@ -69,7 +69,7 @@ const SignupPage = () => {
     setIsSubmitting(true);
     try {
       const response = await axios.post<ApiResponse>("/api/signup", data);
-
+      console.log(response.data);
       if (!response.data.success) {
         toast({
           title: "Error",
@@ -134,7 +134,15 @@ const SignupPage = () => {
                     </FormDescription>
                   )}
                   {usernameMessage && username !== "" && (
-                    <FormDescription className={usernameMessage === "Username is unique" ? "text-green-600" : "text-red-600"}>{usernameMessage}</FormDescription>
+                    <FormDescription
+                      className={
+                        usernameMessage === "Username is unique"
+                          ? "text-green-600"
+                          : "text-red-600"
+                      }
+                    >
+                      {usernameMessage}
+                    </FormDescription>
                   )}
                   <FormMessage />
                 </FormItem>

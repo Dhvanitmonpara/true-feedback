@@ -21,7 +21,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const user = await UserModel.findOne({ username: username });
+    const user = await UserModel.findOne({ username });
 
     if (!user) {
       return Response.json(
