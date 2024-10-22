@@ -53,7 +53,7 @@ const VerifyAccount = () => {
         description: response.data.message
       })
 
-      router.replace('/singin')
+      router.replace('/signin')
 
     }catch (error) {
       console.error("Error registering user", error);
