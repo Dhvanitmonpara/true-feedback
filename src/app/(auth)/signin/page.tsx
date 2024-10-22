@@ -1,74 +1,63 @@
-"use client";
-import React, { useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import Link from "next/link";
-import { useToast } from "@/hooks/use-toast";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
+"use client"
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
+import { signIn } from 'next-auth/react';
 import {
   Form,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Loader2 } from "lucide-react";
-import { signinSchema } from "@/schema/signinSchema";
-import { signIn } from "next-auth/react";
+} from '@/components/ui/form';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useToast } from '@/hooks/use-toast';
+import { signinSchema } from '@/schema/signinSchema';
 
-const SigninPage = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const { toast } = useToast();
+export default function SigninPage() {
   const router = useRouter();
 
   const form = useForm<z.infer<typeof signinSchema>>({
     resolver: zodResolver(signinSchema),
     defaultValues: {
-      identifier: "",
-      password: "",
+      identifier: '',
+      password: '',
     },
   });
 
+  const { toast } = useToast();
   const onSubmit = async (data: z.infer<typeof signinSchema>) => {
-    setIsSubmitting(true);
-    try {
-      const result = await signIn("credentials", {
-        redirect: false,
-        identifier: data.identifier,
-        password: data.password,
-      });
-      if (result?.error) {
-        if (result.error === "CredentialsSignin") {
-          toast({
-            title: "Login Failed",
-            description: "Incorrect username or password",
-            variant: "destructive",
-          });
-        } else {
-          toast({
-            title: "Error",
-            description: result.error,
-            variant: "destructive",
-          });
-        }
-      }
-      console.log(result);
-      if (result?.url) {
-        router.replace("/dashboard");
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+    const result = await signIn('credentials', {
+      redirect: false,
+      identifier: data.identifier,
+      password: data.password,
+    });
 
+    if (result?.error) {
+      if (result.error === 'CredentialsSignin') {
+        toast({
+          title: 'Login Failed',
+          description: 'Incorrect username or password',
+          variant: 'destructive',
+        });
+      } else {
+        toast({
+          title: 'Error',
+          description: result.error,
+          variant: 'destructive',
+        });
+      }
+    }
+
+    if (result?.url) {
+      router.replace('/dashboard');
+    }
+  }
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+    <div className="flex justify-center items-center min-h-screen bg-gray-800">
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
         <div className="text-center">
           <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">
@@ -104,22 +93,15 @@ const SigninPage = () => {
                 </FormItem>
               )}
             />
-            <Button disabled={isSubmitting} type="submit">
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Please wait
-                </>
-              ) : (
-                "Signin"
-              )}
+            <Button className="w-full" type="submit">
+             Signin
             </Button>
           </form>
         </Form>
         <div className="text-center mt-4">
           <p>
             Not a member yet?{" "}
-            <Link href="/sign-up" className="text-blue-600 hover:text-blue-800">
+            <Link href="/signup" className="text-blue-600 hover:underline">
               Sign up
             </Link>
           </p>
@@ -128,5 +110,3 @@ const SigninPage = () => {
     </div>
   );
 };
-
-export default SigninPage;
