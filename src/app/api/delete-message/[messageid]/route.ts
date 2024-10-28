@@ -1,8 +1,8 @@
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../auth/[...nextauth]/options";
 import connectDB from "@/lib/connectDB";
 import UserModel from "@/model/user.model";
 import { User } from "next-auth";
+import { authOptions } from "../../auth/[...nextauth]/options";
 
 export async function DELETE(req: Request, {params}: {params: {messageid: string}}) {
 
@@ -49,7 +49,7 @@ export async function DELETE(req: Request, {params}: {params: {messageid: string
     return Response.json(
       {
         success: true,
-        messages: "Message deleted successfully",
+        message: "Message deleted successfully",
       },
       { status: 200 }
     );

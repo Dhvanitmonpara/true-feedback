@@ -1,9 +1,9 @@
 import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]/options";
 import connectDB from "@/lib/connectDB";
 import UserModel from "@/model/user.model";
 import { User } from "next-auth";
 import mongoose from "mongoose";
+import { authOptions } from "../auth/[...nextauth]/options";
 
 export async function GET() {
   await connectDB();
