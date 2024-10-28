@@ -57,10 +57,10 @@ export default function SignInForm() {
       }
     }
 
-    setIsLoading(false);
     if (result?.url) {
       router.refresh();
     }
+    setIsLoading(false);
   };
 
   return (
