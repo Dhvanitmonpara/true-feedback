@@ -11,7 +11,7 @@ function Navbar() {
   const user: User = session?.user;
 
   return (
-    <nav className="p-4 md:p-6 shadow-md">
+    <nav className="p-4 md:p-6 shadow-md bg-zinc-100">
       <div className="container mx-auto flex flex-col md:flex-row items-center justify-between">
         <Link className="text-xl font-bold mb-4 md:mb-0" href="/">
           True Feedback
