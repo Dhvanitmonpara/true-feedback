@@ -54,7 +54,10 @@ export const authOptions: NextAuthOptions = {
             throw new Error("Invalid login credentials");
           }
         } catch (error) {
-          throw new Error("An error occurred during authentication", error as ErrorOptions);
+          throw new Error(
+            "An error occurred during authentication",
+            error as ErrorOptions
+          );
         }
       },
     }),
@@ -68,6 +71,13 @@ export const authOptions: NextAuthOptions = {
     // }),
   ],
   callbacks: {
+    async redirect({ url, baseUrl }) {
+  
+      if (url.startsWith(baseUrl)) {
+        return url;
+      }
+      return baseUrl + "/dashboard"; 
+    },
     async session({ session, token }) {
       if (token) {
         session.user._id = token._id;
@@ -93,5 +103,5 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET?.toString(),
 };

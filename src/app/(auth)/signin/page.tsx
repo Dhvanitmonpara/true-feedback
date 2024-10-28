@@ -1,21 +1,21 @@
-"use client"
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import * as z from 'zod';
-import { signIn } from 'next-auth/react';
+"use client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { signIn } from "next-auth/react";
 import {
   Form,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useToast } from '@/hooks/use-toast';
-import { signinSchema } from '@/schema/signinSchema';
+} from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
+import { signinSchema } from "@/schema/signinSchema";
 
 export default function SigninPage() {
   const router = useRouter();
@@ -23,39 +23,59 @@ export default function SigninPage() {
   const form = useForm<z.infer<typeof signinSchema>>({
     resolver: zodResolver(signinSchema),
     defaultValues: {
-      identifier: '',
-      password: '',
+      identifier: "",
+      password: "",
     },
   });
 
   const { toast } = useToast();
   const onSubmit = async (data: z.infer<typeof signinSchema>) => {
-    const result = await signIn('credentials', {
+    const result = await signIn("credentials", {
       redirect: false,
       identifier: data.identifier,
       password: data.password,
+      callbackUrl: '/dashboard',
     });
 
+    if (!result) {
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again later.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (result?.error) {
-      if (result.error === 'CredentialsSignin') {
-        toast({
-          title: 'Login Failed',
-          description: 'Incorrect username or password',
-          variant: 'destructive',
-        });
-      } else {
-        toast({
-          title: 'Error',
-          description: result.error,
-          variant: 'destructive',
-        });
+      switch (result.error) {
+        case "CredentialsSignin":
+          toast({
+            title: "Login Failed",
+            description: "Incorrect username or password",
+            variant: "destructive",
+          });
+          break;
+        case "VerificationRequired":
+          toast({
+            title: "Account Not Verified",
+            description: "Please verify your account before logging in.",
+            variant: "destructive",
+          });
+          break;
+        default:
+          toast({
+            title: "Error",
+            description: result.error || "Unexpected error occurred",
+            variant: "destructive",
+          });
       }
     }
 
     if (result?.url) {
-      router.replace('/dashboard');
+      router.push("/dashboard");
     }
-  }
+
+  };
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-800">
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
@@ -84,17 +104,13 @@ export default function SigninPage() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Password</FormLabel>
-                  <Input
-                    type="password"
-                    placeholder="password"
-                    {...field}
-                  />
+                  <Input type="password" placeholder="password" {...field} />
                   <FormMessage />
                 </FormItem>
               )}
             />
             <Button className="w-full" type="submit">
-             Signin
+              Signin
             </Button>
           </form>
         </Form>
@@ -109,4 +125,4 @@ export default function SigninPage() {
       </div>
     </div>
   );
-};
+}
