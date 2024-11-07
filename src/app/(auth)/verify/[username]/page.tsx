@@ -78,7 +78,7 @@ const VerifyAccount = () => {
           <p className="mb-4">Signup to start your anonymous adventure</p>
         </div>
         <Form {...form}>
-          <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
+          <form className="space-y-6 !m-0" onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
               name="code"
               control={form.control}
@@ -92,7 +92,7 @@ const VerifyAccount = () => {
                 </FormItem>
               )}
             />
-            <Button disabled={isSubmitting} type="submit">
+            <Button className='w-full' disabled={isSubmitting} type="submit">
               {isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />

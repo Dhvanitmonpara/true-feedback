@@ -9,11 +9,15 @@ export const sendVerificationEmail = async (
 ) => {
   try {
     const transport = nodemailer.createTransport({
-      host: "sandbox.smtp.mailtrap.io",
-      port: 2525,
+      service: "gmail",
+      port: 465,
+      secure: true,
       auth: {
         user: process.env.NODEMAILER_USERNAME,
         pass: process.env.NODEMAILER_PASSWORD,
+      },
+      tls: {
+        rejectUnauthorized: false,
       },
     });
 
@@ -29,7 +33,7 @@ export const sendVerificationEmail = async (
     };
 
     const mailResponse = await transport.sendMail(mailOptions);
-    
+
     return { ...mailResponse, success: true };
   } catch (error: unknown) {
     if (error instanceof Error) {
